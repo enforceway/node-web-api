@@ -7,7 +7,7 @@ module.exports = () => {
 		host     : 'localhost',
 		user     : 'root',
 		password : '303585amd',
-		database : 'test'
+		database : 'hello_contact'
 	});
 	return connection;
 }

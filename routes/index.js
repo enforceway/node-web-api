@@ -7,10 +7,10 @@ var dbConnector = require("../util/mysql-ping");
 //   res.render('index', { title: 'Express' });
 // });
 
-router.post('/api/getContactList', function(req, res, next) {
+router.get('/api/getContactList', function(req, res, next) {
 	var connectInst = dbConnector();
 	connectInst.connect();
-	connectInst.query('select id, name, mobile_number from contacts', function(error, results, fields) {
+	connectInst.query('select id, name, mobile_number from contact_t', function(error, results, fields) {
 		var responseObj = {
 			code: 0,
 			msg: "",
