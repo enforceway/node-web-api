@@ -1,0 +1,1 @@
+CREATE SCHEMA `hello_contact` DEFAULT CHARACTER SET utf8 ;
