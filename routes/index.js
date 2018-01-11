@@ -60,7 +60,7 @@ router.get('/api/getContactById', function(req, res, next) {
 
 router.post('/api/updateContact', function(req, res, next) {
 	var responseObj = newResponse();
-	console.log("updateContact:", req.body);
+	// console.log("updateContact:", req.body, req.params, req.param);
 	if(!req.body.id) {
 		responseObj.ifSuccess = false;
 		// responseObj.code = '';
@@ -70,7 +70,7 @@ router.post('/api/updateContact', function(req, res, next) {
 
 	var connectInst = dbConnector();
 	connectInst.connect();
-	console.log("updateContact");
+	// console.log("updateContact");
 	request('/api/getContactById?id=' + req.body.id, function (error, response, body) {
 		console.log('error:', error); // Print the error if one occurred
 		console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
