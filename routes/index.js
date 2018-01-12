@@ -165,33 +165,51 @@ router.post('/api/setFavorite', function(req, res, next) {
 
 // 收藏的联系人接口
 router.get('/api/getContactWithLikes', function(req, res, next) {
-	var responseObj = newResponse();
-	var connectInst = dbConnector();
-	connectInst.connect();
-
-	if(!req.query.id) {
-		responseObj.code = 1;
-		responseObj.msg = "缺少参数";
-		res.json(responseObj);
-		return;
-	}
 	var sql = 'select contact_t.id, contact_t.mobile_number, contact_t.name, contact_t.address, contact_t.email, contact_t.birthday, favorite_contact_t.if_like ' + 
 				'from hello_contact.contact_t left join hello_contact.favorite_contact_t ' + 
-				'on favorite_contact_t.contact_id = contact_t.id where contact_t.id = ?';
-	connectInst.query(sql, [req.query.id], function(error, results, fields) {
+				'on favorite_contact_t.contact_id = contact_t.id';
+	var responseObj = newResponse();
+	var sqlParam = [];
+	if(req.query.id) {
+		sql += ' where contact_t.id = ?';
+		sqlParam.push(req.query.id);
+	}
+	var connectInst = dbConnector();
+	connectInst.connect();
+	connectInst.query(sql, sqlParam, function(error, results, fields) {
 		if(error) {
 			responseObj.code = 1;
 			responseObj.msg = error;
 			res.json(responseObj);
 			return;
         }
-        if(results.length == 1) {
-        	responseObj.data = results[0]
-        	// 更新联系人收藏
-        }
+    	responseObj.data = results;
         res.json(responseObj);
 	});
 	connectInst.end();
 });
+
+// 收藏的联系人接口
+router.get('/api/getFavoriteContacts', function(req, res, next) {
+	var sql = 'select contact_t.id, contact_t.mobile_number, contact_t.name, contact_t.address, contact_t.email, contact_t.birthday, favorite_contact_t.if_like ' + 
+				'from favorite_contact_t left join contact_t ' + 
+				'on favorite_contact_t.contact_id = contact_t.id where favorite_contact_t.if_like = 1';
+	var responseObj = newResponse();
+	var connectInst = dbConnector();
+	connectInst.connect();
+	console.log(sql);
+	connectInst.query(sql, function(error, results, fields) {
+		if(error) {
+			responseObj.code = 1;
+			responseObj.msg = error;
+			res.json(responseObj);
+			return;
+        }
+    	responseObj.data = results;
+        res.json(responseObj);
+	});
+	connectInst.end();
+});
+
 
 module.exports = router;
