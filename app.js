@@ -7,8 +7,18 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var session = require('express-session');
 
 var app = express();
+
+var cookieSession = require('cookie-session')
+
+app.set('trust proxy', 1) // trust first proxy
+app.use(cookieParser('keyboard cat'));
+app.use(cookieSession({
+  name: 'keyboard cat',
+  keys: ['key1', 'key2']
+}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -22,7 +32,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(cookieParser());
+// app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);

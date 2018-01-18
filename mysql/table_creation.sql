@@ -17,3 +17,9 @@ CREATE TABLE `hello_contact`.`favorite_contact_t` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 );
+
+
+CREATE TABLE `hello_contact`.`album_t` (
+  `id` INT NOT NULL,
+  `album_url` VARCHAR(100) NULL,
+  PRIMARY KEY (`id`));

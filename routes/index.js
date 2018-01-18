@@ -3,12 +3,32 @@ var router = express.Router();
 var dbConnector = require("../util/mysql-ping");
 var newResponse = require("../util/responseGenerator");
 var request = require('request');
+var session = require('express-session');
+var cookieParser = require('cookie-parser');
 
 /* GET home page. */
 // router.get('/', function(req, res, next) {
 //   res.render('index', { title: 'Express' });
 // });
-
+router.get('/api/**', function(req, res, next) {
+	console.log("the route of index is called");
+	console.log(req.session.userInfo);
+	
+	if(!req.session.userInfo) {
+		req.session.userInfo = {username: "enforceway"};
+    }
+    next();
+});
+router.get('/api/ifLoginActive', function(req, res, next) {
+	var responseObj = newResponse();
+	if(!req.session.userInfo) {
+		responseObj.code = 1;
+		responseObj.msg = "没有登录";
+    } else {
+    	responseObj.data = { active: true };
+    }
+    res.json(responseObj);
+});
 router.get('/api/getContactList', function(req, res, next) {
 	var connectInst = dbConnector();
 	connectInst.connect();
@@ -91,7 +111,7 @@ router.post('/api/addContact', function(req, res, next) {
 	var connectInst = dbConnector();
 	connectInst.connect();
 	connectInst.query('insert into contact_t(name, mobile_number, address, email, description) values(?,?,?,?,?)',
-					[req.body.name, req.body.mobile_number, req.body.address, req.body.email, req.body.description, req.body.id], function(error, results, fields) {
+					[req.body.name, req.body.mobile_number, req.body.address, req.body.email, req.body.description], function(error, results, fields) {
 		if(error) {
 			responseObj.code = 1;
 			responseObj.msg = error;
