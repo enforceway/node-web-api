@@ -184,15 +184,15 @@ router.post('/api/setFavorite', function(req, res, next) {
 });
 
 // 收藏的联系人接口
-router.get('/api/getContactWithLikes', function(req, res, next) {
+router.get('/api/getContactWithLikes/:id', function(req, res, next) {
 	var sql = 'select contact_t.id, contact_t.mobile_number, contact_t.name, contact_t.address, contact_t.email, contact_t.birthday, favorite_contact_t.if_like ' + 
 				'from hello_contact.contact_t left join hello_contact.favorite_contact_t ' + 
 				'on favorite_contact_t.contact_id = contact_t.id';
 	var responseObj = newResponse();
 	var sqlParam = [];
-	if(req.query.id) {
+	if(req.params.id) {
 		sql += ' where contact_t.id = ?';
-		sqlParam.push(req.query.id);
+		sqlParam.push(req.params.id);
 	}
 	var connectInst = dbConnector();
 	connectInst.connect();
